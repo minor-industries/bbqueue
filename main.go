@@ -44,6 +44,11 @@ func server(db *gorm.DB) {
 			"message": "pong",
 		})
 	})
+
+	r.GET("/graph.svg", func(c *gin.Context) {
+		plotHandler(db, c)
+	})
+
 	r.Run()
 }
 

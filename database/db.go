@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"github.com/glebarez/sqlite"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
@@ -25,8 +24,6 @@ func Get(filename string) (*gorm.DB, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "migrate measurement")
 	}
-
-	fmt.Print(db)
 
 	return db, nil
 }
