@@ -37,14 +37,19 @@ func plotHandler(db *gorm.DB, c *gin.Context) {
 }
 
 func plotIt(db *gorm.DB, probeNames []string) ([]byte, error) {
+	now := time.Now()
+
 	p := plot.New()
 
 	p.Title.Text = "Temperature"
 	p.X.Label.Text = "t"
 	p.Y.Label.Text = "Temp"
 
-	xticks := plot.TimeTicks{Format: "2006-01-02\n15:04"}
-	p.X.Tick.Marker = xticks
+	//xticks := plot.TimeTicks{Format: "2006-01-02\n15:04"}
+	//p.X.Tick.Marker = xticks
+
+	p.X.Min = -1.0
+	p.X.Max = 0.0
 
 	var vs []interface{}
 
@@ -52,11 +57,10 @@ func plotIt(db *gorm.DB, probeNames []string) ([]byte, error) {
 		vs = append(vs, probeName)
 		pts := plotter.XYs{}
 
-		now := time.Now()
 		data, err := database.GetProbeData(
 			db,
 			probeName,
-			now.Add(-(2*time.Hour + 30*time.Minute)),
+			now.Add(-(1 * time.Hour)),
 			now.Add(time.Hour),
 		)
 		if err != nil {
@@ -64,9 +68,8 @@ func plotIt(db *gorm.DB, probeNames []string) ([]byte, error) {
 		}
 
 		for _, d := range data {
-			_, offset := d.Time.Zone()
 			pts = append(pts, plotter.XY{
-				X: float64(d.Time.Unix() + int64(offset)),
+				X: d.Time.Sub(now).Hours(),
 				Y: d.Temp*9/5 + 32,
 			})
 		}
