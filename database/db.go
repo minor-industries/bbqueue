@@ -44,10 +44,20 @@ func GetProbes(db *gorm.DB) ([]string, error) {
 	return result, nil
 }
 
-func GetProbeData(db *gorm.DB, probeName string) ([]Measurement, error) {
+func GetProbeData(
+	db *gorm.DB,
+	probeName string,
+	after time.Time,
+	before time.Time,
+) ([]Measurement, error) {
 	var m []Measurement
 
-	tx := db.Where("probe_id = ?", probeName).Order("time asc").Find(&m)
+	tx := db.Where(
+		"probe_id = ? and time >= ? and time <= ?",
+		probeName,
+		after,
+		before,
+	).Order("time asc").Find(&m)
 	if tx.Error != nil {
 		return nil, errors.Wrap(tx.Error, "find")
 	}

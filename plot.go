@@ -10,6 +10,7 @@ import (
 	"gonum.org/v1/plot/plotutil"
 	"gonum.org/v1/plot/vg"
 	"gorm.io/gorm"
+	"time"
 )
 
 func plotHandler(db *gorm.DB, c *gin.Context) {
@@ -51,7 +52,13 @@ func plotIt(db *gorm.DB, probeNames []string) ([]byte, error) {
 		vs = append(vs, probeName)
 		pts := plotter.XYs{}
 
-		data, err := database.GetProbeData(db, probeName)
+		now := time.Now()
+		data, err := database.GetProbeData(
+			db,
+			probeName,
+			now.Add(-(2*time.Hour + 30*time.Minute)),
+			now.Add(time.Hour),
+		)
 		if err != nil {
 			return nil, errors.Wrap(err, "get probe data")
 		}
