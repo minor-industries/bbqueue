@@ -56,11 +56,11 @@ func plotIt(db *gorm.DB, probeNames []string) ([]byte, error) {
 			return nil, errors.Wrap(err, "get probe data")
 		}
 
-		//t0 := data[0].Time
 		for _, d := range data {
+			_, offset := d.Time.Zone()
 			pts = append(pts, plotter.XY{
-				X: float64(d.Time.Unix()),
-				Y: d.Temp,
+				X: float64(d.Time.Unix() + int64(offset)),
+				Y: d.Temp*9/5 + 32,
 			})
 		}
 
