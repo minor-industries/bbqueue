@@ -45,7 +45,7 @@ func server(db *gorm.DB) {
 		})
 	})
 
-	r.GET("/graph.svg", func(c *gin.Context) {
+	r.GET("/plot.svg", func(c *gin.Context) {
 		plotHandler(db, c)
 	})
 

@@ -26,17 +26,13 @@ func plotHandler(db *gorm.DB, c *gin.Context) {
 		return
 	}
 
-	_, err = plotIt(db, probeNames)
+	svg, err := plotIt(db, probeNames)
 	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
-	//svg, err := plotIt(data)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//c.Data(200, "image/svg+xml", svg)
+	c.Data(200, "image/svg+xml", svg)
 }
 
 func plotIt(db *gorm.DB, probeNames []string) ([]byte, error) {
