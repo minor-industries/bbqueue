@@ -1,4 +1,4 @@
-package main
+package radio
 
 func nullTerminatedBytesToString(b []byte) string {
 	// Find the index of the null terminator
