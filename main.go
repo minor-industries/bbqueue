@@ -8,25 +8,29 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/davecgh/go-spew/spew"
+	"github.com/minor-industries/bbqueue/db"
 	"github.com/minor-industries/bbqueue/schema"
 	"github.com/minor-industries/rfm69"
 	"github.com/pkg/errors"
 	"github.com/tarm/serial"
+	"gorm.io/gorm"
 	"path/filepath"
 	"strings"
 	"time"
 )
 
-func pollUsbSerial() string {
+func pollUsbSerial() (string, error) {
 	polling := false
 	for {
 		dev, err := filepath.Glob("/dev/tty.usb*")
-		noErr(err)
+		if err != nil {
+			return "", errors.Wrap(err, "glob")
+		}
 
 		switch len(dev) {
 		case 1:
 			fmt.Println("found", dev[0])
-			return dev[0]
+			return dev[0], nil
 		case 0:
 			if !polling {
 				fmt.Println("polling for device")
@@ -34,13 +38,16 @@ func pollUsbSerial() string {
 			polling = true
 			time.Sleep(100 * time.Millisecond)
 		default:
-			panic(errors.New("found more than one serial device"))
+			return "", errors.New("found more than one serial device")
 		}
 	}
 }
 
-func run() error {
-	dev := pollUsbSerial()
+func poll(db *gorm.DB) error {
+	dev, err := pollUsbSerial()
+	if err != nil {
+		return errors.Wrap(err, "poll usb serial")
+	}
 
 	device, err := serial.OpenPort(&serial.Config{
 		Name:        dev,
@@ -50,7 +57,9 @@ func run() error {
 		Parity:      serial.ParityNone,
 		StopBits:    1,
 	})
-	noErr(err)
+	if err != nil {
+		return errors.Wrap(err, "open serial port")
+	}
 
 	scanner := bufio.NewScanner(device)
 	for scanner.Scan() {
@@ -136,14 +145,20 @@ func processPacket(p *rfm69.Packet) error {
 	return nil
 }
 
-func main() {
+func run() error {
+	db, err := db.Get("sqlite3.db")
+	if err != nil {
+		return errors.Wrap(err, "get db")
+	}
+
 	for {
-		err := run()
+		err := poll(db)
 		fmt.Println("error:", err)
 	}
 }
 
-func noErr(err error) {
+func main() {
+	err := run()
 	if err != nil {
 		panic(err)
 	}
