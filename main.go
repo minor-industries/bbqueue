@@ -8,7 +8,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/davecgh/go-spew/spew"
-	"github.com/minor-industries/bbqueue/db"
+	"github.com/minor-industries/bbqueue/database"
 	"github.com/minor-industries/bbqueue/schema"
 	"github.com/minor-industries/rfm69"
 	"github.com/pkg/errors"
@@ -73,7 +73,7 @@ func poll(db *gorm.DB) error {
 			_ = log // fmt.Println(log)
 		case "RPC":
 			args := parts[1:]
-			err := rpc(args)
+			err := rpc(db, args)
 			if err != nil {
 				fmt.Println("rpc error", err)
 			}
@@ -84,7 +84,7 @@ func poll(db *gorm.DB) error {
 	return scanner.Err()
 }
 
-func rpc(args []string) error {
+func rpc(db *gorm.DB, args []string) error {
 	if len(args) == 0 {
 		return errors.New("missing rpc method")
 	}
@@ -92,14 +92,14 @@ func rpc(args []string) error {
 	method := args[0]
 	switch method {
 	case "RADIO-TX":
-		return handleRadioTx(args[1:])
+		return handleRadioTx(db, args[1:])
 	}
 
 	fmt.Println("rpc", args)
 	return nil
 }
 
-func handleRadioTx(args []string) error {
+func handleRadioTx(db *gorm.DB, args []string) error {
 	if len(args) == 0 {
 		return errors.New("missing payload")
 	}
@@ -119,10 +119,10 @@ func handleRadioTx(args []string) error {
 		return errors.Wrap(err, "unmarshal packet")
 	}
 
-	return processPacket(p)
+	return processPacket(db, p)
 }
 
-func processPacket(p *rfm69.Packet) error {
+func processPacket(db *gorm.DB, p *rfm69.Packet) error {
 	fmt.Println(spew.Sdump(p))
 
 	cmd := p.Payload[0]
@@ -136,17 +136,30 @@ func processPacket(p *rfm69.Packet) error {
 		if err != nil {
 			return errors.Wrap(err, "parse temperature data")
 		}
+		probeDescription := nullTerminatedBytesToString(tcData.Description[:])
 		fmt.Println(
-			nullTerminatedBytesToString(tcData.Description[:]),
+			probeDescription,
 			tcData.Temperature,
 		)
+
+		result := db.Create(&database.Measurement{
+			ProbeID: probeDescription,
+			Time:    time.Now(),
+			Temp:    float64(tcData.Temperature),
+		})
+
+		if result.Error != nil {
+			panic(result.Error)
+		}
+
+		return errors.Wrap(result.Error, "create")
 	}
 
 	return nil
 }
 
 func run() error {
-	db, err := db.Get("sqlite3.db")
+	db, err := database.Get("sqlite3.db")
 	if err != nil {
 		return errors.Wrap(err, "get db")
 	}
