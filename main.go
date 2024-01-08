@@ -2,10 +2,13 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/base64"
+	"encoding/binary"
 	"encoding/hex"
 	"fmt"
 	"github.com/davecgh/go-spew/spew"
+	"github.com/minor-industries/bbqueue/schema"
 	"github.com/minor-industries/rfm69"
 	"github.com/pkg/errors"
 	"github.com/tarm/serial"
@@ -107,7 +110,28 @@ func handleRadioTx(args []string) error {
 		return errors.Wrap(err, "unmarshal packet")
 	}
 
+	return processPacket(p)
+}
+
+func processPacket(p *rfm69.Packet) error {
 	fmt.Println(spew.Sdump(p))
+
+	cmd := p.Payload[0]
+	data := p.Payload[1:]
+
+	switch cmd {
+	case 0x02:
+		fmt.Println(cmd, hex.Dump(data))
+		tcData := &schema.ThermocoupleData{}
+		err := binary.Read(bytes.NewBuffer(data), binary.LittleEndian, tcData)
+		if err != nil {
+			return errors.Wrap(err, "parse temperature data")
+		}
+		fmt.Println(
+			nullTerminatedBytesToString(tcData.Description[:]),
+			tcData.Temperature,
+		)
+	}
 
 	return nil
 }
