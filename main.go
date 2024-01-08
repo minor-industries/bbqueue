@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/minor-industries/bbqueue/database"
 	"github.com/minor-industries/bbqueue/radio"
 	"github.com/pkg/errors"
+	"gorm.io/gorm"
 	"time"
 )
 
@@ -13,6 +15,8 @@ func run() error {
 	if err != nil {
 		return errors.Wrap(err, "get db")
 	}
+
+	go server(db)
 
 	for {
 		err := radio.Poll(func(probeName string, temp float64) error {
@@ -31,6 +35,16 @@ func run() error {
 			fmt.Println("poll error:", err)
 		}
 	}
+}
+
+func server(db *gorm.DB) {
+	r := gin.Default()
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	r.Run()
 }
 
 func main() {
