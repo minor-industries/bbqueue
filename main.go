@@ -2,8 +2,12 @@ package main
 
 import (
 	"bufio"
-	"errors"
+	"encoding/base64"
+	"encoding/hex"
 	"fmt"
+	"github.com/davecgh/go-spew/spew"
+	"github.com/minor-industries/rfm69"
+	"github.com/pkg/errors"
 	"github.com/tarm/serial"
 	"path/filepath"
 	"strings"
@@ -89,6 +93,21 @@ func handleRadioTx(args []string) error {
 	}
 	payload := args[0]
 	fmt.Println(payload)
+
+	raw, err := base64.StdEncoding.DecodeString(payload)
+	if err != nil {
+		return errors.Wrap(err, "base64 decode payload")
+	}
+
+	fmt.Println(hex.Dump(raw))
+
+	p := &rfm69.Packet{}
+	_, err = p.UnmarshalMsg(raw)
+	if err != nil {
+		return errors.Wrap(err, "unmarshal packet")
+	}
+
+	fmt.Println(spew.Sdump(p))
 
 	return nil
 }
