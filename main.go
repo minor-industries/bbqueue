@@ -49,7 +49,7 @@ func server(db *gorm.DB) {
 		plotHandler(db, c)
 	})
 
-	r.Run()
+	r.Run("0.0.0.0:8080")
 }
 
 func main() {

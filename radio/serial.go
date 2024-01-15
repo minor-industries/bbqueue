@@ -22,7 +22,8 @@ type Callback func(probeName string, temp float64) error
 func pollUsbSerial() (string, error) {
 	polling := false
 	for {
-		dev, err := filepath.Glob("/dev/tty.usb*")
+		//dev, err := filepath.Glob("/dev/tty.usb*")
+		dev, err := filepath.Glob("/dev/ttyACM0")
 		if err != nil {
 			return "", errors.Wrap(err, "glob")
 		}
