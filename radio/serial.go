@@ -23,7 +23,7 @@ func pollUsbSerial() (string, error) {
 	polling := false
 	for {
 		//dev, err := filepath.Glob("/dev/tty.usb*")
-		dev, err := filepath.Glob("/dev/ttyACM0")
+		dev, err := filepath.Glob(deviceGlob)
 		if err != nil {
 			return "", errors.Wrap(err, "glob")
 		}
