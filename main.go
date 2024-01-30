@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/minor-industries/bbqueue/database"
+	"github.com/minor-industries/bbqueue/html"
 	"github.com/minor-industries/bbqueue/radio"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
+	"html/template"
 	"time"
 )
 
@@ -39,10 +41,12 @@ func run() error {
 
 func server(db *gorm.DB) {
 	r := gin.Default()
+
+	templ := template.Must(template.New("").ParseFS(html.FS, "*.html"))
+	r.SetHTMLTemplate(templ)
+
 	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
+		c.HTML(200, "index.html", map[string]any{})
 	})
 
 	r.GET("/plot.svg", func(c *gin.Context) {
