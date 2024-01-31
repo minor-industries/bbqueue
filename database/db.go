@@ -64,3 +64,25 @@ func GetProbeData(
 
 	return m, nil
 }
+
+const latestMeasurementQuery = `
+SELECT
+    *,
+	max(time)
+FROM
+	measurements
+GROUP BY
+	probe_id
+ORDER BY
+	probe_id ASC
+`
+
+func GetLatestTemps(db *gorm.DB) ([]Measurement, error) {
+	var m []Measurement
+	tx := db.Raw(latestMeasurementQuery).Scan(&m)
+	if tx.Error != nil {
+		return nil, errors.Wrap(tx.Error, "select")
+	}
+
+	return m, nil
+}
