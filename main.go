@@ -9,11 +9,29 @@ import (
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 	"html/template"
+	"os"
+	"path/filepath"
 	"time"
 )
 
+func setup() (string, error) {
+	datadir := os.ExpandEnv("$HOME/.bbqueue")
+
+	err := os.MkdirAll(datadir, 0o700)
+	if err != nil {
+		return "", errors.Wrap(err, "make data dir")
+	}
+
+	return datadir, nil
+}
+
 func run() error {
-	db, err := database.Get("sqlite3.db")
+	datadir, err := setup()
+	if err != nil {
+		return errors.Wrap(err, "setup")
+	}
+
+	db, err := database.Get(filepath.Join(datadir, "bbqueue.db"))
 	if err != nil {
 		return errors.Wrap(err, "get db")
 	}
