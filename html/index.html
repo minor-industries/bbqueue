@@ -27,14 +27,24 @@
 </head>
 <body>
 <div>
-    BBQueue
+    <h1>BBQueue</h1>
 </div>
 
 <table>
     <tr>
         <th>Probe Name</th>
-        <th>Temp</th>
+        <th>Temp (°F)</th>
+        <th>Last Update</th>
     </tr>
+
+    {{$now := .now}}
+    {{range $i, $d := .data}}
+    <tr>
+        <td>{{$d.ProbeID}}</td>
+        <td>{{FmtTemp $d.Temp}}</td>
+        <td>{{LastUpdated $d.Time $now}}</td>
+    </tr>
+    {{end}}
 </table>
 
 <div>

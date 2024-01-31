@@ -42,11 +42,20 @@ func run() error {
 func server(db *gorm.DB) {
 	r := gin.Default()
 
-	templ := template.Must(template.New("").ParseFS(html.FS, "*.html"))
+	templ := template.Must(template.New("").Funcs(templateFuncs).ParseFS(html.FS, "*.html"))
 	r.SetHTMLTemplate(templ)
 
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(200, "index.html", map[string]any{})
+		data, err := database.GetLatestTemps(db)
+		if err != nil {
+			_ = c.Error(err)
+			return
+		}
+
+		c.HTML(200, "index.html", map[string]any{
+			"data": data,
+			"now":  time.Now(),
+		})
 	})
 
 	r.GET("/plot.svg", func(c *gin.Context) {
