@@ -5,9 +5,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/binary"
-	"encoding/hex"
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/minor-industries/bbqueue/schema"
 	"github.com/minor-industries/rfm69"
 	"github.com/pkg/errors"
@@ -66,12 +64,11 @@ func Poll(cb Callback) error {
 	for scanner.Scan() {
 		line := scanner.Text()
 		parts := strings.Fields(line)
-		fmt.Println(parts)
+		//fmt.Println(parts)
 
 		switch parts[0] {
 		case "LOG":
-			log := strings.TrimPrefix(line, "LOG ")
-			_ = log // fmt.Println(log)
+			//log := strings.TrimPrefix(line, "LOG ")
 		case "RPC":
 			args := parts[1:]
 			err := rpc(cb, args)
@@ -96,7 +93,7 @@ func rpc(cb Callback, args []string) error {
 		return handleRadioTx(cb, args[1:])
 	}
 
-	fmt.Println("rpc", args)
+	//fmt.Println("rpc", args)
 	return nil
 }
 
@@ -105,14 +102,14 @@ func handleRadioTx(cb Callback, args []string) error {
 		return errors.New("missing payload")
 	}
 	payload := args[0]
-	fmt.Println(payload)
+	//fmt.Println(payload)
 
 	raw, err := base64.StdEncoding.DecodeString(payload)
 	if err != nil {
 		return errors.Wrap(err, "base64 decode payload")
 	}
 
-	fmt.Println(hex.Dump(raw))
+	//fmt.Println(hex.Dump(raw))
 
 	p := &rfm69.Packet{}
 	_, err = p.UnmarshalMsg(raw)
@@ -124,14 +121,14 @@ func handleRadioTx(cb Callback, args []string) error {
 }
 
 func processPacket(cb Callback, p *rfm69.Packet) error {
-	fmt.Println(spew.Sdump(p))
+	//fmt.Println(spew.Sdump(p))
 
 	cmd := p.Payload[0]
 	data := p.Payload[1:]
 
 	switch cmd {
 	case 0x02:
-		fmt.Println(cmd, hex.Dump(data))
+		//fmt.Println(cmd, hex.Dump(data))
 		tcData := &schema.ThermocoupleData{}
 		err := binary.Read(bytes.NewBuffer(data), binary.LittleEndian, tcData)
 		if err != nil {

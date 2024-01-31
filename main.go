@@ -40,7 +40,7 @@ func run() error {
 
 	for {
 		err := radio.Poll(func(probeName string, temp float64) error {
-			fmt.Println("callback", probeName, temp)
+			//fmt.Println("callback", probeName, temp)
 
 			result := db.Create(&database.Measurement{
 				ProbeID: probeName,
@@ -58,6 +58,7 @@ func run() error {
 }
 
 func server(db *gorm.DB) {
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
 	templ := template.Must(template.New("").Funcs(templateFuncs).ParseFS(html.FS, "*.html"))
