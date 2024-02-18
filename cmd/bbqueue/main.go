@@ -9,6 +9,7 @@ import (
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 	"html/template"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"time"
@@ -81,7 +82,30 @@ func server(db *gorm.DB) {
 		plotHandler(db, c)
 	})
 
+	files(r,
+		"dygraph.js", "application/javascript",
+		"dygraph.css", "text/css",
+		"chart.html", "text/html",
+	)
+
 	r.Run("0.0.0.0:8080")
+}
+
+func files(r *gin.Engine, files ...string) {
+	for i := 0; i < len(files); i += 2 {
+		name := files[i]
+		ct := files[i+1]
+		r.GET("/"+name, func(c *gin.Context) {
+			header := c.Writer.Header()
+			header["Content-Type"] = []string{ct}
+			content, err := fs.ReadFile(html.FS, name)
+			if err != nil {
+				c.Status(404)
+				return
+			}
+			_, _ = c.Writer.Write(content)
+		})
+	}
 }
 
 func main() {
