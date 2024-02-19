@@ -86,12 +86,12 @@ func server(db *gorm.DB) {
 	r.GET("/data.csv", func(c *gin.Context) {
 		c.Writer.Header().Set("Content-Type", "text/plain")
 		c.Status(200)
-		c.Writer.Write([]byte(strings.TrimSpace(`
-Date,Temperature
-2008-05-07,75
-2008-05-08,70
-2008-05-09,80
-`)))
+		content, err := getCSV(db, c)
+		if err != nil {
+			c.Error(err)
+			return
+		}
+		_, _ = c.Writer.Write(content)
 	})
 
 	files(r,
@@ -101,6 +101,27 @@ Date,Temperature
 	)
 
 	r.Run("0.0.0.0:8080")
+}
+
+func getCSV(db *gorm.DB, c *gin.Context) ([]byte, error) {
+	lines := []string{
+		"Date,Temp",
+	}
+
+	probes, err := database.GetProbes(db)
+	if err != nil {
+		return nil, errors.Wrap(err, "get probes")
+	}
+
+	data, err := database.GetProbeData(db, probes[0], time.Time{}, time.Now())
+	for _, datum := range data {
+		lines = append(lines, fmt.Sprintf("%s,%f",
+			datum.Time.Format("2006-01-02 03:04:05"),
+			datum.Temp,
+		))
+	}
+
+	return []byte(strings.Join(lines, "\n")), nil
 }
 
 func files(r *gin.Engine, files ...string) {
