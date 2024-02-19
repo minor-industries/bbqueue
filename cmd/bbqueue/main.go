@@ -12,6 +12,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -80,6 +81,17 @@ func server(db *gorm.DB) {
 
 	r.GET("/plot.svg", func(c *gin.Context) {
 		plotHandler(db, c)
+	})
+
+	r.GET("/data.csv", func(c *gin.Context) {
+		c.Writer.Header().Set("Content-Type", "text/plain")
+		c.Status(200)
+		c.Writer.Write([]byte(strings.TrimSpace(`
+Date,Temperature
+2008-05-07,75
+2008-05-08,70
+2008-05-09,80
+`)))
 	})
 
 	files(r,
