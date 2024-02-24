@@ -4,10 +4,16 @@
             src="dygraph.js"></script>
     <link rel="stylesheet" type="text/css"
           src="dygraph.css"/>
+
+    <style>
+        #graphdiv {
+            position: absolute;
+            inset: 10px 10px 10px 10px;
+        }
+    </style>
 </head>
 <body>
-<h1>chart</h1>
-<div id="graphdiv"></div>
+<div id="graphdiv" class="wide"></div>
 <script type="text/javascript">
     Dygraph.onDOMready(function onDOMready() {
         // let data = "Date,Temperature\n" +

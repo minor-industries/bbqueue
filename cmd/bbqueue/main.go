@@ -113,11 +113,17 @@ func getCSV(db *gorm.DB, c *gin.Context) ([]byte, error) {
 		return nil, errors.Wrap(err, "get probes")
 	}
 
-	data, err := database.GetProbeData(db, probes[0], time.Time{}, time.Now())
+	fmt.Println(probes)
+
+	after, err := time.Parse("2006-01-02", "1980-01-19")
+	if err != nil {
+		panic("bad time")
+	}
+	data, err := database.GetProbeData(db, probes[1], after, time.Now())
 	for _, datum := range data {
 		lines = append(lines, fmt.Sprintf("%s,%f",
-			datum.Time.Format("2006-01-02 03:04:05"),
-			datum.Temp,
+			datum.Time.Format("2006/01/02 15:04:05"),
+			datum.Temp*9/5+32,
 		))
 	}
 
