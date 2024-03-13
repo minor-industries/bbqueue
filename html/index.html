@@ -28,8 +28,20 @@
     <style>
         .wide {
             width: 97.5%;
-            height: 400px;
             margin-bottom: 10px;
+        }
+    </style>
+
+    <style>
+        .container {
+            display: flex;
+        }
+
+        .column {
+            flex: 1;
+            /*padding: 10px;*/
+            margin-bottom: 10px;
+            margin-right: 20px;
         }
     </style>
 
@@ -44,21 +56,24 @@
         Dygraph.onDOMready(function onDOMready() {
             makeGraph(document.getElementById("graphdiv0"), {
                 series: "bbqueue_bbq01_meat",
-                title: "bbq01_meat",
+                title: "bbq01 meat",
                 ylabel: "temperature (C)",
-                mappers: [CtoF]
+                mappers: [CtoF],
+                height: 300,
             });
             makeGraph(document.getElementById("graphdiv1"), {
                 series: "bbqueue_bbq01_bbq",
                 title: "bbq01 bbq",
                 ylabel: "temperature (C)",
-                mappers: [CtoF]
+                mappers: [CtoF],
+                height: 300,
             });
             makeGraph(document.getElementById("graphdiv2"), {
                 series: "bbqueue_bbq01_voltage",
                 title: "bbq01 battery voltage",
                 ylabel: "voltage (V)",
                 includeZero: true,
+                height: 150,
             });
         });
     </script>
@@ -85,8 +100,12 @@
 <!--    {{end}}-->
 <!--</table>-->
 
-<div id="graphdiv0" class="wide"></div>
-<div id="graphdiv1" class="wide"></div>
+
+<div class="container">
+    <div id="graphdiv0" class="column"></div>
+    <div id="graphdiv1" class="column"></div>
+</div>
+
 <div id="graphdiv2" class="wide"></div>
 
 </body>
