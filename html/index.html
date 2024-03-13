@@ -37,16 +37,22 @@
     <link rel="stylesheet" type="text/css" href="dygraph.css"/>
     <script type="text/javascript" src="graphs.js"></script>
     <script type="text/javascript">
+        function CtoF(t) {
+            return t * 1.8 + 32;
+        }
+
         Dygraph.onDOMready(function onDOMready() {
             makeGraph(document.getElementById("graphdiv0"), {
                 series: "bbqueue_bbq01_meat",
                 title: "bbq01_meat",
-                ylabel: "temperature (C)"
+                ylabel: "temperature (C)",
+                mappers: [CtoF]
             });
             makeGraph(document.getElementById("graphdiv1"), {
                 series: "bbqueue_bbq01_bbq",
                 title: "bbq01 bbq",
-                ylabel: "temperature (C)"
+                ylabel: "temperature (C)",
+                mappers: [CtoF]
             });
             makeGraph(document.getElementById("graphdiv2"), {
                 series: "bbqueue_bbq01_voltage",
