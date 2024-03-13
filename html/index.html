@@ -48,6 +48,11 @@
                 title: "bbq01 bbq",
                 ylabel: "temperature (C)"
             });
+            makeGraph(document.getElementById("graphdiv2"), {
+                series: "bbqueue_bbq01_voltage",
+                title: "bbq01 battery voltage",
+                ylabel: "voltage (V)"
+            });
         });
     </script>
 </head>
@@ -75,6 +80,7 @@
 
 <div id="graphdiv0" class="wide"></div>
 <div id="graphdiv1" class="wide"></div>
+<div id="graphdiv2" class="wide"></div>
 
 </body>
 </html>

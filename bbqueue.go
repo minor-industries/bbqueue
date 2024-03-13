@@ -28,6 +28,7 @@ func run() error {
 	graph, err := rtgraph.New(os.ExpandEnv("$HOME/bbqueue.db"), errCh, []string{
 		"bbqueue_bbq01_bbq",
 		"bbqueue_bbq01_meat",
+		"bbqueue_bbq01_voltage",
 	})
 	if err != nil {
 		return errors.Wrap(err, "new rtgraph")

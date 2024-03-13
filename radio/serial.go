@@ -138,6 +138,17 @@ func processPacket(cb Callback, p *rfm69.Packet) error {
 		if err := cb(probeName, float64(tcData.Temperature)); err != nil {
 			return errors.Wrap(err, "callback")
 		}
+	case 0x03:
+		tcData := &schema.PowerData{}
+		err := binary.Read(bytes.NewBuffer(data), binary.LittleEndian, tcData)
+		if err != nil {
+			return errors.Wrap(err, "parse power data")
+		}
+		probeName := nullTerminatedBytesToString(tcData.Description[:])
+		probeName += "_voltage"
+		if err := cb(probeName, float64(tcData.Voltage)); err != nil {
+			return errors.Wrap(err, "callback")
+		}
 	}
 
 	return nil
