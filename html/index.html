@@ -24,6 +24,27 @@
             font-style: italic;
         }
     </style>
+
+    <style>
+        .wide {
+            width: 97.5%;
+            height: 400px;
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <script type="text/javascript" src="dygraph.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="dygraph.css"/>
+    <script type="text/javascript" src="graphs.js"></script>
+    <script type="text/javascript">
+        Dygraph.onDOMready(function onDOMready() {
+            makeGraph(document.getElementById("graphdiv0"), {
+                series: "bbqueue_bbq01_meat",
+                title: "bbq01_meat",
+                ylabel: "temperature (C)"
+            })
+        });
+    </script>
 </head>
 <body>
 <div>
@@ -47,9 +68,8 @@
     {{end}}
 </table>
 
-<div>
-    <img src="plot.svg"/>
-</div>
+<div id="graphdiv0" class="wide"></div>
+<div id="graphdiv1" class="wide"></div>
 
 </body>
 </html>
