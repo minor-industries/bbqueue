@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/minor-industries/bbqueue/database"
 	"github.com/minor-industries/bbqueue/html"
+	"github.com/minor-industries/bbqueue/plot"
 	"github.com/minor-industries/bbqueue/radio"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
@@ -80,7 +81,7 @@ func server(db *gorm.DB) {
 	})
 
 	r.GET("/plot.svg", func(c *gin.Context) {
-		plotHandler(db, c)
+		plot.PlotHandler(db, c)
 	})
 
 	r.GET("/data.csv", func(c *gin.Context) {

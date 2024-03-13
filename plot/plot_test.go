@@ -1,4 +1,4 @@
-package main
+package plot
 
 import (
 	"github.com/minor-industries/bbqueue/database"

@@ -1,4 +1,4 @@
-package main
+package plot
 
 import (
 	"bytes"
@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-func plotHandler(db *gorm.DB, c *gin.Context) {
+func PlotHandler(db *gorm.DB, c *gin.Context) {
 	//months := getMonthsParam(c, 3)
 	//
 	//data, err := getData(dbmap, months)
