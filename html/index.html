@@ -57,7 +57,8 @@
             makeGraph(document.getElementById("graphdiv2"), {
                 series: "bbqueue_bbq01_voltage",
                 title: "bbq01 battery voltage",
-                ylabel: "voltage (V)"
+                ylabel: "voltage (V)",
+                includeZero: true,
             });
         });
     </script>
@@ -67,22 +68,22 @@
     <h1>BBQueue</h1>
 </div>
 
-<table>
-    <tr>
-        <th>Probe Name</th>
-        <th>Temp (°F)</th>
-        <th>Last Update</th>
-    </tr>
+<!--<table>-->
+<!--    <tr>-->
+<!--        <th>Probe Name</th>-->
+<!--        <th>Temp (°F)</th>-->
+<!--        <th>Last Update</th>-->
+<!--    </tr>-->
 
-    {{$now := .now}}
-    {{range $i, $d := .data}}
-    <tr>
-        <td>{{$d.ProbeID}}</td>
-        <td>{{FmtTemp $d.Temp}}</td>
-        <td>{{LastUpdated $d.Time $now}}</td>
-    </tr>
-    {{end}}
-</table>
+<!--    {{$now := .now}}-->
+<!--    {{range $i, $d := .data}}-->
+<!--    <tr>-->
+<!--        <td>{{$d.ProbeID}}</td>-->
+<!--        <td>{{FmtTemp $d.Temp}}</td>-->
+<!--        <td>{{LastUpdated $d.Time $now}}</td>-->
+<!--    </tr>-->
+<!--    {{end}}-->
+<!--</table>-->
 
 <div id="graphdiv0" class="wide"></div>
 <div id="graphdiv1" class="wide"></div>
