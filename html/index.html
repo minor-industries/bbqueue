@@ -58,7 +58,7 @@
         Dygraph.onDOMready(function onDOMready() {
             makeGraph(document.getElementById("graphdiv0"), {
                 series: "bbqueue_bbq01_meat",
-                title: "bbq01 meat",
+                title: "bbq01 meat (10 min view)",
                 ylabel: "temperature (C)",
                 mappers: [CtoF],
                 height: 300,
@@ -66,7 +66,7 @@
 
             makeGraph(document.getElementById("graphdiv1"), {
                 series: "bbqueue_bbq01_bbq",
-                title: "bbq01 bbq",
+                title: "bbq01 bbq (10 min view)",
                 ylabel: "temperature (C)",
                 mappers: [CtoF],
                 height: 300,
@@ -74,7 +74,7 @@
 
             makeGraph(document.getElementById("graphdiv2"), {
                 series: "bbqueue_bbq01_meat",
-                title: "bbq01 meat",
+                title: "bbq01 meat (24 hr view)",
                 ylabel: "temperature (C)",
                 mappers: [CtoF],
                 includeZero: false,
@@ -84,7 +84,7 @@
 
             makeGraph(document.getElementById("graphdiv3"), {
                 series: "bbqueue_bbq01_bbq",
-                title: "bbq01 bbq",
+                title: "bbq01 bbq (24 hr view)",
                 ylabel: "temperature (C)",
                 mappers: [CtoF],
                 includeZero: false,
@@ -94,7 +94,7 @@
 
             makeGraph(document.getElementById("graphdiv4"), {
                 series: "bbqueue_bbq01_voltage",
-                title: "bbq01 battery voltage",
+                title: "bbq01 battery voltage (24 hr view)",
                 ylabel: "voltage (V)",
                 includeZero: false,
                 height: 150,
@@ -104,10 +104,6 @@
     </script>
 </head>
 <body>
-<div>
-    <h1>BBQueue</h1>
-</div>
-
 <!--<table>-->
 <!--    <tr>-->
 <!--        <th>Probe Name</th>-->
