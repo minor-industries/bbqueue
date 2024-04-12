@@ -56,7 +56,6 @@ func Run() error {
 		errCh <- graph.RunServer("0.0.0.0:8076")
 	}()
 
-	t0 := time.Now()
 	go func() {
 		lastSeen := map[string]schema.Value{}
 		for {
@@ -72,12 +71,12 @@ func Run() error {
 				if ok {
 					dt := now.Sub(last.Timestamp)
 					if dt < time.Second {
-						fmt.Printf("    %s %0.02f %f\n", fullName, now.Sub(t0).Seconds(), value)
+						//fmt.Printf("    %s %0.02f %f\n", fullName, now.Sub(t0).Seconds(), value)
 						return nil
 					}
 				}
 
-				fmt.Printf("add %s %0.02f %f\n", fullName, now.Sub(t0).Seconds(), value)
+				//fmt.Printf("add %s %0.02f %f\n", fullName, now.Sub(t0).Seconds(), value)
 				err := graph.CreateValue(fullName, now, value)
 				return errors.Wrap(err, "create")
 			})
