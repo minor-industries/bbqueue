@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/binary"
+	"encoding/hex"
 	"fmt"
 	"github.com/minor-industries/bbqueue/schema"
 	"github.com/minor-industries/rfm69"
@@ -125,6 +126,8 @@ func processPacket(cb Callback, p *rfm69.Packet) error {
 
 	cmd := p.Payload[0]
 	data := p.Payload[1:]
+
+	fmt.Println(time.Now(), p.RSSI, cmd, p.Src, p.Dst, hex.EncodeToString(data))
 
 	switch cmd {
 	case 0x02:

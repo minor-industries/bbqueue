@@ -34,11 +34,11 @@
     </style>
 
     <script type="text/javascript">
-        const second = 1000;
-        const minute = 60 * second;
-        const hour = 60 * minute;
-
         Dygraph.onDOMready(function onDOMready() {
+            const second = 1000;
+            const minute = 60 * second;
+            const hour = 60 * minute;
+
             function CtoF(t) {
                 return t * 1.8 + 32;
             }
