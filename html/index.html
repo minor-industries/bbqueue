@@ -39,33 +39,27 @@
             const minute = 60 * second;
             const hour = 60 * minute;
 
-            function CtoF(t) {
-                return t * 1.8 + 32;
-            }
-
             new Graph(document.getElementById("graphdiv0"), {
                 seriesNames: [
-                    "bbqueue_bbq01_meat | avg 30s"
+                    "bbqueue_bbq01_meat | CtoF | avg 30s"
                 ],
                 title: "bbq01 meat (10 min view): {value}",
                 ylabel: "temperature (F)",
                 labels: ["x", "y1"],
                 windowSize: 10 * minute,
-                mappers: [CtoF],
                 height: 300,
                 maxGapMs: 10 * second
             });
 
             new Graph(document.getElementById("graphdiv1"), {
                 seriesNames: [
-                    "bbqueue_bbq01_bbq | avg 10m",
-                    "bbqueue_bbq01_bbq"
+                    "bbqueue_bbq01_bbq | CtoF | avg 10m",
+                    "bbqueue_bbq01_bbq | CtoF"
                 ],
                 title: "bbq01 bbq (10 min view): {value}",
                 ylabel: "temperature (F)",
                 labels: ["x", "y1", "y2"],
                 windowSize: 10 * minute,
-                mappers: [CtoF],
                 height: 300,
                 series: {y2: {strokeWidth: 1}},
                 maxGapMs: 10 * second
@@ -73,12 +67,11 @@
 
             new Graph(document.getElementById("graphdiv2"), {
                 seriesNames: [
-                    "bbqueue_bbq01_meat | avg 30s"
+                    "bbqueue_bbq01_meat | CtoF | avg 30s"
                 ],
                 title: "bbq01 meat (24 hr view): {value}",
                 ylabel: "temperature (F)",
                 labels: ["x", "y1"],
-                mappers: [CtoF],
                 includeZero: false,
                 height: 150,
                 windowSize: 24 * hour,
@@ -87,13 +80,12 @@
 
             new Graph(document.getElementById("graphdiv3"), {
                 seriesNames: [
-                    "bbqueue_bbq01_bbq | avg 10m",
-                    "bbqueue_bbq01_bbq"
+                    "bbqueue_bbq01_bbq | CtoF | avg 10m",
+                    "bbqueue_bbq01_bbq | CtoF"
                 ],
                 title: "bbq01 bbq (24 hr view): {value}",
                 ylabel: "temperature (F)",
                 labels: ["x", "y1", "y2"],
-                mappers: [CtoF],
                 includeZero: false,
                 height: 150,
                 windowSize: 24 * hour,
