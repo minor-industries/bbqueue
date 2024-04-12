@@ -6,6 +6,7 @@ import (
 	"github.com/minor-industries/bbqueue/html"
 	"github.com/minor-industries/bbqueue/radio"
 	"github.com/minor-industries/rtgraph"
+	"github.com/minor-industries/rtgraph/database"
 	"github.com/pkg/errors"
 	"os"
 	"strings"
@@ -25,11 +26,21 @@ func setup() (string, error) {
 
 func run() error {
 	errCh := make(chan error)
-	graph, err := rtgraph.New(os.ExpandEnv("$HOME/bbqueue.db"), errCh, []string{
-		"bbqueue_bbq01_bbq",
-		"bbqueue_bbq01_meat",
-		"bbqueue_bbq01_voltage",
-	})
+
+	db, err := database.Get(os.ExpandEnv("$HOME/bbqueue.db"))
+	if err != nil {
+		return errors.Wrap(err, "get database")
+	}
+
+	graph, err := rtgraph.New(
+		&database.Backend{DB: db},
+		errCh,
+		[]string{
+			"bbqueue_bbq01_bbq",
+			"bbqueue_bbq01_meat",
+			"bbqueue_bbq01_voltage",
+		},
+	)
 	if err != nil {
 		return errors.Wrap(err, "new rtgraph")
 	}
