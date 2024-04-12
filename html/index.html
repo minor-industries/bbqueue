@@ -105,6 +105,19 @@
                 windowSize: 24 * hour,
                 maxGapMs: 10 * second
             });
+
+            new Graph(document.getElementById("graphdiv5"), {
+                seriesNames: [
+                    "bbqueue_bbq01_rssi",
+                ],
+                title: "bbq01 RSSI (24 hr view): {value}",
+                ylabel: "dBm",
+                labels: ["x", "y1"],
+                includeZero: true,
+                height: 150,
+                windowSize: 24 * hour,
+                maxGapMs: 10 * second
+            });
         });
     </script>
 </head>
@@ -135,6 +148,7 @@
 <div id="graphdiv2" class="wide"></div>
 <div id="graphdiv3" class="wide"></div>
 <div id="graphdiv4" class="wide"></div>
+<div id="graphdiv5" class="wide"></div>
 
 </body>
 </html>

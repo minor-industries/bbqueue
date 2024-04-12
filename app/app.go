@@ -7,6 +7,7 @@ import (
 	"github.com/minor-industries/bbqueue/radio"
 	"github.com/minor-industries/rtgraph"
 	"github.com/minor-industries/rtgraph/database"
+	"github.com/minor-industries/rtgraph/schema"
 	"github.com/pkg/errors"
 	"os"
 	"strings"
@@ -39,6 +40,7 @@ func Run() error {
 			"bbqueue_bbq01_bbq",
 			"bbqueue_bbq01_meat",
 			"bbqueue_bbq01_voltage",
+			"bbqueue_bbq01_rssi",
 		},
 	)
 	if err != nil {
@@ -54,13 +56,29 @@ func Run() error {
 		errCh <- graph.RunServer("0.0.0.0:8076")
 	}()
 
+	t0 := time.Now()
 	go func() {
+		lastSeen := map[string]schema.Value{}
 		for {
-			err := radio.Poll(func(probeName string, temp float64) error {
-				//fmt.Println("callback", probeName, temp)
+			err := radio.Poll(func(seriesName string, value float64) error {
 				now := time.Now()
-				name := strings.ReplaceAll(probeName, "-", "_")
-				err := graph.CreateValue("bbqueue_"+name, now, temp)
+				fullName := "bbqueue_" + strings.ReplaceAll(seriesName, "-", "_")
+
+				last, ok := lastSeen[fullName]
+				lastSeen[fullName] = schema.Value{
+					Timestamp: now,
+					Value:     value,
+				}
+				if ok {
+					dt := now.Sub(last.Timestamp)
+					if dt < time.Second {
+						fmt.Printf("    %s %0.02f %f\n", fullName, now.Sub(t0).Seconds(), value)
+						return nil
+					}
+				}
+
+				fmt.Printf("add %s %0.02f %f\n", fullName, now.Sub(t0).Seconds(), value)
+				err := graph.CreateValue(fullName, now, value)
 				return errors.Wrap(err, "create")
 			})
 

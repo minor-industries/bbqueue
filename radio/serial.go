@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/binary"
-	"encoding/hex"
 	"fmt"
 	"github.com/minor-industries/bbqueue/schema"
 	"github.com/minor-industries/rfm69"
@@ -127,8 +126,6 @@ func processPacket(cb Callback, p *rfm69.Packet) error {
 	cmd := p.Payload[0]
 	data := p.Payload[1:]
 
-	fmt.Println(time.Now(), p.RSSI, cmd, p.Src, p.Dst, hex.EncodeToString(data))
-
 	switch cmd {
 	case 0x02:
 		//fmt.Println(cmd, hex.Dump(data))
@@ -141,15 +138,19 @@ func processPacket(cb Callback, p *rfm69.Packet) error {
 		if err := cb(probeName, float64(tcData.Temperature)); err != nil {
 			return errors.Wrap(err, "callback")
 		}
+		// TODO: figure out a way to report also RSSI here. Unfortunately we have
+		// something like bbq01_meat instead of bbq01 to work with here
 	case 0x03:
 		tcData := &schema.PowerData{}
 		err := binary.Read(bytes.NewBuffer(data), binary.LittleEndian, tcData)
 		if err != nil {
 			return errors.Wrap(err, "parse power data")
 		}
-		probeName := nullTerminatedBytesToString(tcData.Description[:])
-		probeName += "_voltage"
-		if err := cb(probeName, float64(tcData.Voltage)); err != nil {
+		description := nullTerminatedBytesToString(tcData.Description[:])
+		if err := cb(description+"_voltage", float64(tcData.Voltage)); err != nil {
+			return errors.Wrap(err, "callback")
+		}
+		if err := cb(description+"_rssi", float64(p.RSSI)); err != nil {
 			return errors.Wrap(err, "callback")
 		}
 	}
