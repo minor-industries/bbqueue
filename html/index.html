@@ -34,8 +34,9 @@
     </style>
 
     <script type="text/javascript">
-        const minute = 1000 * 60;
-        const hour = 1000 * 60 * 60;
+        const second = 1000;
+        const minute = 60 * second;
+        const hour = 60 * minute;
 
         Dygraph.onDOMready(function onDOMready() {
             function CtoF(t) {
@@ -44,7 +45,7 @@
 
             new Graph(document.getElementById("graphdiv0"), {
                 seriesNames: [
-                    "bbqueue_bbq01_meat"
+                    "bbqueue_bbq01_meat | avg 30s"
                 ],
                 title: "bbq01 meat (10 min view): {value}",
                 ylabel: "temperature (F)",
@@ -52,23 +53,27 @@
                 windowSize: 10 * minute,
                 mappers: [CtoF],
                 height: 300,
+                maxGapMs: 10 * second
             });
 
             new Graph(document.getElementById("graphdiv1"), {
                 seriesNames: [
+                    "bbqueue_bbq01_bbq | avg 10m",
                     "bbqueue_bbq01_bbq"
                 ],
                 title: "bbq01 bbq (10 min view): {value}",
                 ylabel: "temperature (F)",
-                labels: ["x", "y1"],
+                labels: ["x", "y1", "y2"],
                 windowSize: 10 * minute,
                 mappers: [CtoF],
                 height: 300,
+                series: {y2: {strokeWidth: 1}},
+                maxGapMs: 10 * second
             });
 
             new Graph(document.getElementById("graphdiv2"), {
                 seriesNames: [
-                    "bbqueue_bbq01_meat"
+                    "bbqueue_bbq01_meat | avg 30s"
                 ],
                 title: "bbq01 meat (24 hr view): {value}",
                 ylabel: "temperature (F)",
@@ -76,32 +81,37 @@
                 mappers: [CtoF],
                 includeZero: false,
                 height: 150,
-                windowSize: 24 * hour
+                windowSize: 24 * hour,
+                maxGapMs: 10 * second
             });
 
             new Graph(document.getElementById("graphdiv3"), {
                 seriesNames: [
+                    "bbqueue_bbq01_bbq | avg 10m",
                     "bbqueue_bbq01_bbq"
                 ],
                 title: "bbq01 bbq (24 hr view): {value}",
                 ylabel: "temperature (F)",
-                labels: ["x", "y1"],
+                labels: ["x", "y1", "y2"],
                 mappers: [CtoF],
                 includeZero: false,
                 height: 150,
-                windowSize: 24 * hour
+                windowSize: 24 * hour,
+                series: {y2: {strokeWidth: 1}},
+                maxGapMs: 10 * second
             });
 
             new Graph(document.getElementById("graphdiv4"), {
                 seriesNames: [
-                    "bbqueue_bbq01_voltage"
+                    "bbqueue_bbq01_voltage | avg 30s"
                 ],
                 title: "bbq01 battery voltage (24 hr view): {value}",
                 ylabel: "voltage (V)",
                 labels: ["x", "y1"],
                 includeZero: false,
                 height: 150,
-                windowSize: 24 * hour
+                windowSize: 24 * hour,
+                maxGapMs: 10 * second
             });
         });
     </script>
