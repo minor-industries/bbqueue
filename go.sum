@@ -114,6 +114,8 @@ github.com/minor-industries/rfm69 v0.0.2 h1:dlEQexErE/kX/7AfMRjkDxpN+WH4i0VUYf9b
 github.com/minor-industries/rfm69 v0.0.2/go.mod h1:lGGUGk5f4PkwtZFdYR8kFyCskuIviIPSS/AuhkvhsDU=
 github.com/minor-industries/rtgraph v0.0.5 h1:q5+9W9Ss4Rij5QinlbaxJhQtkO/ge9CV9SABt6hL34s=
 github.com/minor-industries/rtgraph v0.0.5/go.mod h1:Q4ppCS0abSAOuqws+d+fh07ZDo6drahUO+RPM/3rwlY=
+github.com/minor-industries/rtgraph v0.0.6 h1:cX2rBmTtz4KnYBF9HGAJNhR7r0zj/FOAIBJCrzHh7+8=
+github.com/minor-industries/rtgraph v0.0.6/go.mod h1:Q4ppCS0abSAOuqws+d+fh07ZDo6drahUO+RPM/3rwlY=
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd h1:TRLaZ9cD/w8PVh93nsPXa1VrQ6jlwL5oN8l14QlcNfg=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=

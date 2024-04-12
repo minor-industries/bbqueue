@@ -7,7 +7,7 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/glebarez/sqlite v1.11.0
 	github.com/minor-industries/rfm69 v0.0.2
-	github.com/minor-industries/rtgraph v0.0.5
+	github.com/minor-industries/rtgraph v0.0.6
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.9.0
 	github.com/tarm/serial v0.0.0-20180830185346-98f6abe2eb07

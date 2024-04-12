@@ -36,6 +36,7 @@ func Run() error {
 	graph, err := rtgraph.New(
 		&database.Backend{DB: db},
 		errCh,
+		rtgraph.Opts{},
 		[]string{
 			"bbqueue_bbq01_bbq",
 			"bbqueue_bbq01_meat",
