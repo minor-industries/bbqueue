@@ -2,6 +2,8 @@
 
 Open hardware open source wireless temperature probes
 
+![outside shot](https://minor-industries.sfo2.digitaloceanspaces.com/sw/bbqueue_outside.jpg)
+
 ## Screenshot
 
 ![screenshot](https://minor-industries.sfo2.digitaloceanspaces.com/sw/bbqueue_screenshot_01.png)
