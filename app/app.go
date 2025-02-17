@@ -16,17 +16,6 @@ import (
 	"time"
 )
 
-func setup() (string, error) {
-	datadir := os.ExpandEnv("$HOME/.bbqueue")
-
-	err := os.MkdirAll(datadir, 0o700)
-	if err != nil {
-		return "", errors.Wrap(err, "make data dir")
-	}
-
-	return datadir, nil
-}
-
 func Run() error {
 	errCh := make(chan error)
 
@@ -34,6 +23,8 @@ func Run() error {
 	if err != nil {
 		return errors.Wrap(err, "get database")
 	}
+
+	go db.RunWriter(errCh)
 
 	graph, err := rtgraph.New(
 		db,
@@ -74,12 +65,10 @@ func Run() error {
 				if ok {
 					dt := now.Sub(last.Timestamp)
 					if dt < time.Second {
-						//fmt.Printf("    %s %0.02f %f\n", fullName, now.Sub(t0).Seconds(), value)
 						return nil
 					}
 				}
 
-				//fmt.Printf("add %s %0.02f %f\n", fullName, now.Sub(t0).Seconds(), value)
 				err := graph.CreateValue(fullName, now, value)
 				return errors.Wrap(err, "create")
 			})
