@@ -6,9 +6,11 @@ import (
 	"github.com/minor-industries/bbqueue/html"
 	"github.com/minor-industries/bbqueue/radio"
 	"github.com/minor-industries/rtgraph"
-	"github.com/minor-industries/rtgraph/database"
+	"github.com/minor-industries/rtgraph/database/sqlite"
+	"github.com/minor-industries/rtgraph/prom"
 	"github.com/minor-industries/rtgraph/schema"
 	"github.com/pkg/errors"
+	"net/http"
 	"os"
 	"strings"
 	"time"
@@ -28,33 +30,33 @@ func setup() (string, error) {
 func Run() error {
 	errCh := make(chan error)
 
-	db, err := database.Get(os.ExpandEnv("$HOME/bbqueue.db"))
+	db, err := sqlite.Get(os.ExpandEnv("$HOME/bbqueue.db"))
 	if err != nil {
 		return errors.Wrap(err, "get database")
 	}
 
 	graph, err := rtgraph.New(
-		&database.Backend{DB: db},
+		db,
 		errCh,
-		rtgraph.Opts{},
-		[]string{
-			"bbqueue_bbq01_bbq",
-			"bbqueue_bbq01_meat",
-			"bbqueue_bbq01_voltage",
-			"bbqueue_bbq01_rssi",
+		rtgraph.Opts{
+			ExternalMetrics: prom.PublishPrometheusMetrics,
 		},
 	)
 	if err != nil {
 		return errors.Wrap(err, "new rtgraph")
 	}
 
-	graph.StaticFiles(html.FS,
-		"index.html", "text/html",
-	)
+	router := gin.New()
+
+	graph.SetupServer(router.Group("/rtgraph"))
+
+	router.GET("/main.html", func(c *gin.Context) {
+		c.FileFromFS("main.html", http.FS(html.FS))
+	})
 
 	go func() {
 		gin.SetMode(gin.ReleaseMode)
-		errCh <- graph.RunServer("0.0.0.0:8076")
+		errCh <- router.Run("0.0.0.0:8076")
 	}()
 
 	go func() {
